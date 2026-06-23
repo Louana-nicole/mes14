@@ -4,15 +4,15 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>🌟 Mi Galaxia para el Amor de Mi Vida 🌌</title>
-    <!-- Cargamos Three.js para la renderización en 3D -->
+    <!-- Cargamos la biblioteca Three.js para renderización 3D -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-    <!-- Fuentes de Google: Cargamos únicamente la familia Ubuntu para un estilo de letra normal y limpio -->
+    <!-- Fuentes de Google: Cargamos únicamente la familia Ubuntu para un estilo de letra limpio y moderno -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Ubuntu:wght@300;400;500;700&display=swap" rel="stylesheet">
     
     <style>
-        /* Estils generals del document */
+        /* Estilos generales del documento */
         * {
             box-sizing: border-box;
             user-select: none;
@@ -24,13 +24,13 @@
             overflow: hidden; 
             cursor: default;
             background-color: #030008; 
-            font-family: 'Ubuntu', sans-serif; /* Tipografía Ubuntu aplicada a todo el cuerpo */
+            font-family: 'Ubuntu', sans-serif; /* Tipografía Ubuntu aplicada a todo el proyecto */
             color: #ffffff;
             height: 100vh;
             width: 100vw;
         }
 
-        /* Llenç on es renderitza l'escena 3D */
+        /* Lienzo donde se renderiza la escena 3D */
         canvas {
             display: block;
             position: absolute;
@@ -39,7 +39,7 @@
             z-index: 1;
         }
 
-        /* Capa interactiva subtil de fons per capturar tocs i clics */
+        /* Capa interactiva sutil de fondo para capturar clics y toques */
         .interactive-overlay {
             position: absolute;
             top: 0;
@@ -50,7 +50,7 @@
             pointer-events: auto;
         }
 
-        /* Contenidor del text flotant cinemàtic (no bloquejant) */
+        /* Contenedor de texto flotante cinematográfico (no bloqueante) */
         #floating-text-container {
             position: fixed;
             bottom: 15%;
@@ -59,16 +59,16 @@
             width: 90%;
             max-width: 800px;
             z-index: 10;
-            pointer-events: none; /* Permet clics a través del text */
+            pointer-events: none; /* Permite clics a través del texto */
             display: flex;
             justify-content: center;
             align-items: center;
             text-align: center;
         }
 
-        /* Tipografia de tipus Ubuntu i efectes de brillantor per a les frases d'amor */
+        /* Estilo para las frases de amor con brillo suave */
         #story-text {
-            font-family: 'Ubuntu', sans-serif; /* Aseguramos que use letras normales Ubuntu */
+            font-family: 'Ubuntu', sans-serif;
             font-weight: 400;
             font-size: 2.2rem;
             color: #ffe5ec;
@@ -92,7 +92,7 @@
             }
         }
 
-        /* Cors interactius que apareixen en fer clic */
+        /* Corazones interactivos que flotan al hacer clic */
         .floating-heart {
             position: absolute;
             pointer-events: none;
@@ -109,12 +109,12 @@
                 opacity: 1;
             }
             100% {
-                transform: translateY(-180px) scale(1.6) rotate(360deg);
+                transform: translateY(-180px) scale(1.5) rotate(360deg);
                 opacity: 0;
             }
         }
 
-        /* Botó de música flotant elegant */
+        /* Botón elegante de control de sonido */
         #music-toggle {
             position: fixed;
             top: 20px;
@@ -145,7 +145,7 @@
             box-shadow: 0 4px 20px rgba(255, 77, 109, 0.5);
         }
 
-        /* Pantalla d'inici ultra-minimalista: només el botó d'entrada */
+        /* Pantalla de inicio ultra-minimalista: sólo el botón de entrada */
         #start-screen {
             position: fixed;
             inset: 0;
@@ -181,32 +181,310 @@
         #btn-start:active {
             transform: translateY(-1px);
         }
+
+        /* ====================================================================
+           ESTILOS INTEGRADOS DE LA LLUVIA DE ESTRELLAS FUGACES CSS (NIGHT) 🌌
+           ==================================================================== */
+        .night {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            transform: rotateZ(45deg);
+            pointer-events: none;
+            z-index: 3; /* Sobre el lienzo 3D pero detrás del reproductor y del texto */
+            opacity: 0;
+            transition: opacity 2s ease-in-out;
+        }
+
+        .night.active {
+            opacity: 1; /* Se activa durante los 2 minutos de pausa */
+        }
+
+        .shooting_star {
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            height: 2px;
+            background: linear-gradient(-45deg, #5f91ff, rgba(0, 0, 255, 0));
+            border-radius: 999px;
+            filter: drop-shadow(0 0 6px #699bff);
+            animation: tail 3000ms ease-in-out infinite, shooting 3000ms ease-in-out infinite;
+        }
+
+        .shooting_star::before {
+            content: "";
+            position: absolute;
+            top: calc(50% - 1px);
+            right: 0;
+            height: 2px;
+            background: linear-gradient(-45deg, rgba(0, 0, 255, 0), #5f91ff, rgba(0, 0, 255, 0));
+            transform: translateX(50%) rotateZ(45deg);
+            border-radius: 100%;
+            animation: shining 3000ms ease-in-out infinite;
+        }
+
+        .shooting_star::after {
+            content: "";
+            position: absolute;
+            top: calc(50% - 1px);
+            right: 0;
+            height: 2px;
+            background: linear-gradient(-45deg, rgba(0, 0, 255, 0), #5f91ff, rgba(0, 0, 255, 0));
+            transform: translateX(50%) rotateZ(-45deg);
+            border-radius: 100%;
+            animation: shining 3000ms ease-in-out infinite;
+        }
+
+        /* Posicionamientos y retrasos de animación individuales (Tus 20 estrellas) */
+        .shooting_star:nth-child(1) {
+            top: calc(50% - -149px);
+            left: calc(50% - 286px);
+            animation-delay: 9871ms;
+        }
+        .shooting_star:nth-child(1)::before, .shooting_star:nth-child(1)::after {
+            animation-delay: 9871ms;
+        }
+
+        .shooting_star:nth-child(2) {
+            top: calc(50% - 197px);
+            left: calc(50% - 33px);
+            animation-delay: 9633ms;
+        }
+        .shooting_star:nth-child(2)::before, .shooting_star:nth-child(2)::after {
+            animation-delay: 9633ms;
+        }
+
+        .shooting_star:nth-child(3) {
+            top: calc(50% - -126px);
+            left: calc(50% - 44px);
+            animation-delay: 1100ms;
+        }
+        .shooting_star:nth-child(3)::before, .shooting_star:nth-child(3)::after {
+            animation-delay: 1100ms;
+        }
+
+        .shooting_star:nth-child(4) {
+            top: calc(50% - 120px);
+            left: calc(50% - 206px);
+            animation-delay: 491ms;
+        }
+        .shooting_star:nth-child(4)::before, .shooting_star:nth-child(4)::after {
+            animation-delay: 491ms;
+        }
+
+        .shooting_star:nth-child(5) {
+            top: calc(50% - -51px);
+            left: calc(50% - 139px);
+            animation-delay: 3383ms;
+        }
+        .shooting_star:nth-child(5)::before, .shooting_star:nth-child(5)::after {
+            animation-delay: 3383ms;
+        }
+
+        .shooting_star:nth-child(6) {
+            top: calc(50% - -163px);
+            left: calc(50% - 105px);
+            animation-delay: 4467ms;
+        }
+        .shooting_star:nth-child(6)::before, .shooting_star:nth-child(6)::after {
+            animation-delay: 4467ms;
+        }
+
+        .shooting_star:nth-child(7) {
+            top: calc(50% - 90px);
+            left: calc(50% - 284px);
+            animation-delay: 5832ms;
+        }
+        .shooting_star:nth-child(7)::before, .shooting_star:nth-child(7)::after {
+            animation-delay: 5832ms;
+        }
+
+        .shooting_star:nth-child(8) {
+            top: calc(50% - -102px);
+            left: calc(50% - 295px);
+            animation-delay: 9046ms;
+        }
+        .shooting_star:nth-child(8)::before, .shooting_star:nth-child(8)::after {
+            animation-delay: 9046ms;
+        }
+
+        .shooting_star:nth-child(9) {
+            top: calc(50% - 184px);
+            left: calc(50% - 121px);
+            animation-delay: 513ms;
+        }
+        .shooting_star:nth-child(9)::before, .shooting_star:nth-child(9)::after {
+            animation-delay: 513ms;
+        }
+
+        .shooting_star:nth-child(10) {
+            top: calc(50% - 133px);
+            left: calc(50% - 26px);
+            animation-delay: 7534ms;
+        }
+        .shooting_star:nth-child(10)::before, .shooting_star:nth-child(10)::after {
+            animation-delay: 7534ms;
+        }
+
+        .shooting_star:nth-child(11) {
+            top: calc(50% - -74px);
+            left: calc(50% - 242px);
+            animation-delay: 5191ms;
+        }
+        .shooting_star:nth-child(11)::before, .shooting_star:nth-child(11)::after {
+            animation-delay: 5191ms;
+        }
+
+        .shooting_star:nth-child(12) {
+            top: calc(50% - -44px);
+            left: calc(50% - 35px);
+            animation-delay: 3530ms;
+        }
+        .shooting_star:nth-child(12)::before, .shooting_star:nth-child(12)::after {
+            animation-delay: 3530ms;
+        }
+
+        .shooting_star:nth-child(13) {
+            top: calc(50% - 173px);
+            left: calc(50% - 59px);
+            animation-delay: 4041ms;
+        }
+        .shooting_star:nth-child(13)::before, .shooting_star:nth-child(13)::after {
+            animation-delay: 4041ms;
+        }
+
+        .shooting_star:nth-child(14) {
+            top: calc(50% - -118px);
+            left: calc(50% - 245px);
+            animation-delay: 7443ms;
+        }
+        .shooting_star:nth-child(14)::before, .shooting_star:nth-child(14)::after {
+            animation-delay: 7443ms;
+        }
+
+        .shooting_star:nth-child(15) {
+            top: calc(50% - 168px);
+            left: calc(50% - 22px);
+            animation-delay: 159ms;
+        }
+        .shooting_star:nth-child(15)::before, .shooting_star:nth-child(15)::after {
+            animation-delay: 159ms;
+        }
+
+        .shooting_star:nth-child(16) {
+            top: calc(50% - 61px);
+            left: calc(50% - 170px);
+            animation-delay: 9359ms;
+        }
+        .shooting_star:nth-child(16)::before, .shooting_star:nth-child(16)::after {
+            animation-delay: 9359ms;
+        }
+
+        .shooting_star:nth-child(17) {
+            top: calc(50% - -55px);
+            left: calc(50% - 58px);
+            animation-delay: 7741ms;
+        }
+        .shooting_star:nth-child(17)::before, .shooting_star:nth-child(17)::after {
+            animation-delay: 7741ms;
+        }
+
+        .shooting_star:nth-child(18) {
+            top: calc(50% - -19px);
+            left: calc(50% - 201px);
+            animation-delay: 7834ms;
+        }
+        .shooting_star:nth-child(18)::before, .shooting_star:nth-child(18)::after {
+            animation-delay: 7834ms;
+        }
+
+        .shooting_star:nth-child(19) {
+            top: calc(50% - -124px);
+            left: calc(50% - 115px);
+            animation-delay: 8908ms;
+        }
+        .shooting_star:nth-child(19)::before, .shooting_star:nth-child(19)::after {
+            animation-delay: 8908ms;
+        }
+
+        .shooting_star:nth-child(20) {
+            top: calc(50% - -106px);
+            left: calc(50% - 171px);
+            animation-delay: 3898ms;
+        }
+        .shooting_star:nth-child(20)::before, .shooting_star:nth-child(20)::after {
+            animation-delay: 3898ms;
+        }
+
+        /* Animaciones clave para el trazado, destello y traslación */
+        @keyframes tail {
+            0% { width: 0; }
+            30% { width: 100px; }
+            100% { width: 0; }
+        }
+
+        @keyframes shining {
+            0% { width: 0; }
+            50% { width: 30px; }
+            100% { width: 0; }
+        }
+
+        @keyframes shooting {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(300px); }
+        }
     </style>
 </head>
 <body>
 
-    <!-- Pantalla de bienvenida interactiva simplificada al máximo: Solo el botón -->
+    <!-- Pantalla de bienvenida interactiva simplificada al máximo: Solo botón -->
     <div id="start-screen">
         <button id="btn-start">Abrir con amor 💖</button>
     </div>
 
-    <!-- Elemento de Audio para reproducir louana.mp3 con precarga automática y ruta relativa correcta -->
+    <!-- Capa de 20 estrellas fugaces CSS que se activará en la pausa -->
+    <div class="night" id="shooting-stars-sky">
+        <div class="shooting_star"></div>
+        <div class="shooting_star"></div>
+        <div class="shooting_star"></div>
+        <div class="shooting_star"></div>
+        <div class="shooting_star"></div>
+        <div class="shooting_star"></div>
+        <div class="shooting_star"></div>
+        <div class="shooting_star"></div>
+        <div class="shooting_star"></div>
+        <div class="shooting_star"></div>
+        <div class="shooting_star"></div>
+        <div class="shooting_star"></div>
+        <div class="shooting_star"></div>
+        <div class="shooting_star"></div>
+        <div class="shooting_star"></div>
+        <div class="shooting_star"></div>
+        <div class="shooting_star"></div>
+        <div class="shooting_star"></div>
+        <div class="shooting_star"></div>
+        <div class="shooting_star"></div>
+    </div>
+
+    <!-- Elemento de audio para reproducir la música de fondo de forma continua -->
     <audio id="bg-music" src="./louana.mp3" preload="auto" loop></audio>
 
-    <!-- Botón flotante para controlar la música -->
+    <!-- Botón flutuante para pausar/reanudar la música -->
     <button id="music-toggle" onclick="toggleMusic()">🔇</button>
 
-    <!-- Capa interactiva de clics para efectos mágicos -->
+    <!-- Capa interactiva para clics y toques -->
     <div class="interactive-overlay" id="space-overlay"></div>
 
-    <!-- Contenedor del poema flotante -->
+    <!-- Contenedor del texto flutuante -->
     <div id="floating-text-container">
         <p id="story-text"></p>
     </div>
 
     <script>
         // ====================================================================
-        // 1. FRASES FLOTANTS PERSONALITZADES AMB EL SEU NOM CORREGIT 💖
+        // 1. POEMA FLUTUANTE DE AMOR CON EL NOMBRE CORRECTO 💖
         // ====================================================================
         const PHRASES = [
             "Solo te diré que un día 23 como hoy te conocí, Louana Nicole...",
@@ -218,11 +496,11 @@
         ];
 
         // ====================================================================
-        // 2. INICIALITZACIÓ DE L'ESCENA 3D (Three.js)
+        // 2. INICIALIZACIÓN DE LA ESCENA 3D (Three.js)
         // ====================================================================
         const scene = new THREE.Scene();
         
-        // Boira galàctica i color de fons estel·lar profund
+        // Efecto de niebla y color de fondo estelar profundo
         scene.background = new THREE.Color(0x04010f); 
         scene.fog = new THREE.FogExp2(0x04010f, 0.0015);
 
@@ -234,22 +512,20 @@
         renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
         document.body.appendChild(renderer.domElement);
 
-        // Variables per a la interpolació de moviment de la càmera (Paral·laxi)
+        // Variables de paralaje de movimiento de la cámara
         let targetX = 0;
         let targetY = 0;
         let currentX = 0;
         let currentY = 0;
 
-        // Llums per dotar de profunditat a la Lluna i l'escena còsmica
+        // Iluminación general y luces ambientales de tonos románticos
         const ambientLight = new THREE.AmbientLight(0x1e1530); 
         scene.add(ambientLight);
 
-        // Llum rosada sutil que simula una nebulosa veïna
         const pinkLight = new THREE.DirectionalLight(0xff758f, 1.2);
         pinkLight.position.set(-200, 100, 100);
         scene.add(pinkLight);
 
-        // Llum blava que genera contrast romàntic
         const blueLight = new THREE.DirectionalLight(0x4cc9f0, 0.8);
         blueLight.position.set(200, -100, -100);
         scene.add(blueLight);
@@ -258,33 +534,30 @@
         let moonMesh; 
 
         // ====================================================================
-        // 3. CÀRREGA DE RECURSOS (Lluna i Estrelles)
+        // 3. CREACIÓN DE LOS ELEMENTOS CÓSMICOS (Galaxia y Luna)
         // ====================================================================
         const textureLoader = new THREE.TextureLoader();
 
-        // Crear el sistema de partícules de la galàxia
+        // Generador de sistema de partículas de estrellas de la galaxia
         function createGalaxy() {
             const particlesGeometry = new THREE.BufferGeometry();
             const particlesCount = 18000;
             const posArray = new Float32Array(particlesCount * 3);
             const colorArray = new Float32Array(particlesCount * 3);
 
-            // Colors elegants i pastels per simular una galàxia viva
             const colors = [
                 new THREE.Color(0xffffff),
-                new THREE.Color(0xffb6c1), // Rosa
-                new THREE.Color(0xbdecb6), // Menta suave
-                new THREE.Color(0x90e0ef), // Azul claro
+                new THREE.Color(0xffb6c1), // Rosa suave
+                new THREE.Color(0xbdecb6), // Verde menta suave
+                new THREE.Color(0x90e0ef), // Azul cósmico
                 new THREE.Color(0xffc6ff)  // Violeta
             ];
 
             for (let i = 0; i < particlesCount; i++) {
-                // Posicionar estrelles en un nuvol esfèric gegant
                 posArray[i * 3] = (Math.random() - 0.5) * 800;
                 posArray[i * 3 + 1] = (Math.random() - 0.5) * 800;
                 posArray[i * 3 + 2] = (Math.random() - 0.5) * 800;
 
-                // Color còsmic aleatori per a aquesta partícula
                 const chosenColor = colors[Math.floor(Math.random() * colors.length)];
                 colorArray[i * 3] = chosenColor.r;
                 colorArray[i * 3 + 1] = chosenColor.g;
@@ -294,14 +567,11 @@
             particlesGeometry.setAttribute('position', new THREE.BufferAttribute(posArray, 3));
             particlesGeometry.setAttribute('color', new THREE.BufferAttribute(colorArray, 3));
 
-            // Intentar carregar textura circular transparent per donar suavitat a les estrelles
             let starTexture;
             try {
-                starTexture = textureLoader.load('https://threejs.org/examples/textures/sprites/disc.png', undefined, undefined, () => {
-                    console.log("Cargada textura de estrella");
-                }); 
+                starTexture = textureLoader.load('https://threejs.org/examples/textures/sprites/disc.png'); 
             } catch (e) {
-                console.log("Error al cargar recurso externo; usando sistema por defecto.");
+                console.log("Error al cargar la textura de estrella, usando render por defecto.");
             }
 
             const particlesMaterial = new THREE.PointsMaterial({
@@ -322,7 +592,7 @@
             return particlesMesh;
         }
 
-        // Crear l'objecte 3D de la Lluna amb suport a fallbacks
+        // Generador de objeto 3D de la Luna
         function createMoon() {
             const moonGeometry = new THREE.SphereGeometry(75, 64, 64); 
             
@@ -333,7 +603,6 @@
                 bumpScale: 0.05
             });
 
-            // Carregar imatge de mapa lunar
             textureLoader.load(
                 'https://threejs.org/examples/textures/planets/moon_1024.jpg',
                 (texture) => {
@@ -342,7 +611,7 @@
                 },
                 undefined,
                 () => {
-                    // Si falla el servidor extern de textures, s'aplica un color brillant místic
+                    // Fallback visual místico en caso de error de conexión
                     moonMaterial.color.setHex(0xe8e8ff);
                     moonMaterial.emissive = new THREE.Color(0x221133);
                 }
@@ -359,40 +628,43 @@
         moonMesh = createMoon();
 
         // ====================================================================
-        // 4. MOTOR DE TEXT FLOTANT (Transicions de Desvaniment i Pausa de 30s)
+        // 4. CICLO DE FRASES CÓSMICAS (Con intervalo de contemplación de 2 minutos)
         // ====================================================================
         const storyText = document.getElementById('story-text');
+        const shootingStarsSky = document.getElementById('shooting-stars-sky');
         let currentPhraseIndex = 0;
 
         function showNextPhrase() {
-            // Desvanir el text actual cap a fora
             storyText.style.opacity = '0';
             
             setTimeout(() => {
-                // Si ja hem mostrat totes les frases, netegem el text i iniciem la pausa de 30 segons per observar la galàxia
                 if (currentPhraseIndex === PHRASES.length) {
-                    storyText.innerHTML = ""; // Deixem l'espai net per observar la galàxia
-                    currentPhraseIndex = 0; // Reiniciem l'índex per al següent cicle
+                    storyText.innerHTML = ""; // Limpiamos la pantalla para la contemplación silenciosa
+                    currentPhraseIndex = 0; 
                     
-                    // Esperar 30 segons abans de començar el cicle de nou
-                    setTimeout(showNextPhrase, 30000);
+                    // Activamos las 20 hermosas estrellas fugaces CSS con transiciones fluidas de opacidad ☄️
+                    shootingStarsSky.classList.add('active');
+                    
+                    // Espera exactamente 2 minutos (120,000 ms) observando las estrellas antes de reiniciar
+                    setTimeout(() => {
+                        // Apagamos las estrellas fugaces justo antes de reanudar el poema
+                        shootingStarsSky.classList.remove('active');
+                        showNextPhrase();
+                    }, 120000);
                 } else {
-                    // Mostrar la frase corresponent
                     storyText.innerHTML = PHRASES[currentPhraseIndex];
                     storyText.style.opacity = '1';
                     currentPhraseIndex++;
                     
-                    // Esperar 7.5 segons abans de passar a la següent frase o a la pausa
                     setTimeout(showNextPhrase, 7500);
                 }
-            }, 1500); // Temps coincident amb la transició CSS d'opacitat
+            }, 1500); 
         }
 
-        // Iniciar el cicle de frases després d'un breu retard inicial
         setTimeout(showNextPhrase, 1000);
 
         // ====================================================================
-        // 4.5. SISTEMA DE AUDIO OPTIMIZADO (louana.mp3)
+        // 4.5. SISTEMA DE REPRODUCCIÓN DE AUDIO SEGURO
         // ====================================================================
         const bgMusic = document.getElementById('bg-music');
         const musicToggle = document.getElementById('music-toggle');
@@ -400,29 +672,23 @@
         const startScreen = document.getElementById('start-screen');
         let musicStarted = false;
 
-        // Aseguramos volumen inicial alto
         bgMusic.volume = 1.0;
 
-        // Evento directo de clic en el botón de entrada para arrancar de forma síncrona y segura
         btnStart.addEventListener('click', () => {
-            // Desvanecemos la pantalla de bienvenida
             startScreen.style.opacity = '0';
             setTimeout(() => {
                 startScreen.style.display = 'none';
             }, 600);
 
-            // IMPORTANTE: Reproducir el archivo directamente SIN usar bgMusic.load() primero.
-            // Esto permite que el navegador conserve de forma intacta la autorización táctil del usuario.
+            // Iniciamos la melodía sin llamar a .load() para mantener los permisos activos
             bgMusic.play().then(() => {
                 musicStarted = true;
                 musicToggle.innerHTML = "🔊";
-                console.log("Melodía iniciada correctamente desde el clic primario.");
             }).catch(err => {
-                console.warn("Fallo al reproducir audio desde botón de inicio:", err);
+                console.warn("Audio retenido temporalmente por las políticas del navegador:", err);
             });
         });
 
-        // Alternador manual del botón de volumen flotante
         window.toggleMusic = function() {
             if (!musicStarted) {
                 musicStarted = true;
@@ -431,7 +697,7 @@
                 bgMusic.play().then(() => {
                     musicToggle.innerHTML = "🔊";
                 }).catch(err => {
-                    console.error("Fallo al reanudar audio:", err);
+                    console.error("Error al reanudar la música:", err);
                 });
             } else {
                 bgMusic.pause();
@@ -439,7 +705,6 @@
             }
         }
 
-        // Función de respaldo en caso de clics accidentales en el fondo
         function startMusicFallback() {
             if (!musicStarted && bgMusic.paused) {
                 bgMusic.play().then(() => {
@@ -450,16 +715,13 @@
         }
 
         // ====================================================================
-        // 5. INTERACTIVITAT (Paral·laxi i Llançament de Cors)
+        // 5. INTERACTIVIDAD Y EFECTO DE CORAZONES FLUTUANTES
         // ====================================================================
-        
-        // Seguiment de moviment del ratolí
         window.addEventListener('mousemove', (e) => {
             targetX = (e.clientX - window.innerWidth / 2) * 0.08;
             targetY = (e.clientY - window.innerHeight / 2) * 0.08;
         });
 
-        // Suport per a gestos d'arrossegament en telèfons
         window.addEventListener('touchmove', (e) => {
             if (e.touches.length > 0) {
                 targetX = (e.touches[0].clientX - window.innerWidth / 2) * 0.08;
@@ -467,14 +729,12 @@
             }
         });
 
-        // Esdeveniment de clic a la pantalla per crear cors y activar música
         const overlay = document.getElementById('space-overlay');
         overlay.addEventListener('click', (e) => {
             createHeart(e.clientX, e.clientY);
             startMusicFallback();
         });
 
-        // Compatibilidad garantizada para dispositivos táctiles móviles
         overlay.addEventListener('touchstart', (e) => {
             if (e.touches && e.touches[0]) {
                 createHeart(e.touches[0].clientX, e.touches[0].clientY);
@@ -497,28 +757,27 @@
             
             document.body.appendChild(heart);
 
-            // Elimina l'element de la memòria en acabar la seva animació
             setTimeout(() => {
                 heart.remove();
             }, duration * 1000);
         }
 
         // ====================================================================
-        // 6. ANIMACIÓ CONTÍNUA I RENDERITZAT
+        // 6. LOOP DE ANIMACIÓN 3D DEL UNIVERSO
         // ====================================================================
         const animate = function () {
             requestAnimationFrame(animate);
 
-            // Rotacions gravitacionals de la galàxia
+            // Rota de manera continua el fondo galáctico
             galaxyMesh.rotation.y += 0.0003;
             galaxyMesh.rotation.x += 0.0001;
             
-            // Rotació subtil de l'aspre lunar
+            // Rotación lenta sobre el eje de la Luna
             if (moonMesh) {
                 moonMesh.rotation.y += 0.0006; 
             }
 
-            // Interpolació suavizada per simular profunditat inercial (Lerp)
+            // Suavizado dinámico del paralaje (Lerp)
             currentX += (targetX - currentX) * 0.04;
             currentY += (targetY - currentY) * 0.04;
 
@@ -529,11 +788,10 @@
             renderer.render(scene, camera); 
         };
 
-        // Inicialitzem el bucle del motor 3D
         animate();
 
         // ====================================================================
-        // 7. DISSENY ADAPTATIU (Responsiu)
+        // 7. RESPONSIVIDAD DE PANTALLA
         // ====================================================================
         window.addEventListener('resize', () => {
             camera.aspect = window.innerWidth / window.innerHeight;
