@@ -1,0 +1,398 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🌟 Mi Galaxia para el Amor de Mi Vida 🌌</title>
+    <!-- Cargamos Three.js para la renderización en 3D -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <!-- Fuentes de Google de alta calidad -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@600;700&family=Montserrat:wght@300;400;600&display=swap" rel="stylesheet">
+    
+    <style>
+        /* Estils generals del document */
+        * {
+            box-sizing: border-box;
+            user-select: none;
+            -webkit-user-select: none;
+        }
+        
+        body { 
+            margin: 0; 
+            overflow: hidden; 
+            cursor: default;
+            background-color: #030008; 
+            font-family: 'Montserrat', sans-serif;
+            color: #ffffff;
+            height: 100vh;
+            width: 100vw;
+        }
+
+        /* Llenç on es renderitza l'escena 3D */
+        canvas {
+            display: block;
+            position: absolute;
+            top: 0;
+            left: 0;
+            z-index: 1;
+        }
+
+        /* Capa interactiva subtil de fons per capturar tocs i clics */
+        .interactive-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 2;
+            pointer-events: auto;
+        }
+
+        /* Contenidor del text flotant cinemàtic (no bloquejant) */
+        #floating-text-container {
+            position: fixed;
+            bottom: 15%;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 90%;
+            max-width: 800px;
+            z-index: 10;
+            pointer-events: none; /* Permet clics a través del text */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+        }
+
+        /* Tipografia manuscrita i efectes de brillantor per a les frases d'amor */
+        #story-text {
+            font-family: 'Dancing Script', cursive;
+            font-size: 2.6rem;
+            color: #ffe5ec;
+            text-shadow: 0 0 10px rgba(255, 77, 109, 0.65), 
+                         0 0 20px rgba(255, 77, 109, 0.4),
+                         0 2px 4px rgba(0, 0, 0, 0.8);
+            line-height: 1.4;
+            margin: 0;
+            opacity: 0;
+            transition: opacity 1.5s ease-in-out;
+        }
+
+        @media (max-width: 768px) {
+            #story-text {
+                font-size: 1.9rem;
+                line-height: 1.3;
+            }
+            #floating-text-container {
+                bottom: 18%;
+            }
+        }
+
+        /* Cors interactius que apareixen en fer clic */
+        .floating-heart {
+            position: absolute;
+            pointer-events: none;
+            color: #ff4d6d;
+            font-size: 1.5rem;
+            z-index: 99;
+            animation: floatUp 2.2s ease-out forwards;
+            filter: drop-shadow(0 0 6px rgba(255, 77, 109, 0.7));
+        }
+
+        @keyframes floatUp {
+            0% {
+                transform: translateY(0) scale(0) rotate(0deg);
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(-180px) scale(1.6) rotate(360deg);
+                opacity: 0;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Capa interactiva de clics para efectos mágicos -->
+    <div class="interactive-overlay" id="space-overlay"></div>
+
+    <!-- Contenedor del poema flotante -->
+    <div id="floating-text-container">
+        <p id="story-text"></p>
+    </div>
+
+    <script>
+        // ====================================================================
+        // 1. FRASES FLOTANTS PERSONALITZADES AMB EL SEU NOM CORREGIT 💖
+        // ====================================================================
+        const PHRASES = [
+            "Solo te diré que un día 23 como hoy te conocí, Louana Nicole...",
+            "...y desde entonces cada latido de mi corazón menciona tu nombre. ❤️",
+            "Sé que no te gusta mucho el texto y más te gustan las acciones...",
+            "...así que solo quería decirte que estoy muy orgulloso de todo lo que haces...",
+            "...vamos gerrera, estoy contigoo!✨",
+            "muah..."
+        ];
+
+        // ====================================================================
+        // 2. INICIALITZACIÓ DE L'ESCENA 3D (Three.js)
+        // ====================================================================
+        const scene = new THREE.Scene();
+        
+        // Boira galàctica i color de fons estel·lar profund
+        scene.background = new THREE.Color(0x04010f); 
+        scene.fog = new THREE.FogExp2(0x04010f, 0.0015);
+
+        const camera = new THREE.PerspectiveCamera(65, window.innerWidth / window.innerHeight, 0.1, 1500);
+        camera.position.z = 180;
+
+        const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: false }); 
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+        document.body.appendChild(renderer.domElement);
+
+        // Variables per a la interpolació de moviment de la càmera (Paral·laxi)
+        let targetX = 0;
+        let targetY = 0;
+        let currentX = 0;
+        let currentY = 0;
+
+        // Llums per dotar de profunditat a la Lluna i l'escena còsmica
+        const ambientLight = new THREE.AmbientLight(0x1e1530); 
+        scene.add(ambientLight);
+
+        // Llum rosada sutil que simula una nebulosa veïna
+        const pinkLight = new THREE.DirectionalLight(0xff758f, 1.2);
+        pinkLight.position.set(-200, 100, 100);
+        scene.add(pinkLight);
+
+        // Llum blava que genera contrast romàntic
+        const blueLight = new THREE.DirectionalLight(0x4cc9f0, 0.8);
+        blueLight.position.set(200, -100, -100);
+        scene.add(blueLight);
+
+        let galaxyMesh; 
+        let moonMesh; 
+
+        // ====================================================================
+        // 3. CÀRREGA DE RECURSOS (Lluna i Estrelles)
+        // ====================================================================
+        const textureLoader = new THREE.TextureLoader();
+
+        // Crear el sistema de partícules de la galàxia
+        function createGalaxy() {
+            const particlesGeometry = new THREE.BufferGeometry();
+            const particlesCount = 18000;
+            const posArray = new Float32Array(particlesCount * 3);
+            const colorArray = new Float32Array(particlesCount * 3);
+
+            // Colors elegants i pastels per simular una galàxia viva
+            const colors = [
+                new THREE.Color(0xffffff),
+                new THREE.Color(0xffb6c1), // Rosa
+                new THREE.Color(0xbdecb6), // Menta suave
+                new THREE.Color(0x90e0ef), // Azul claro
+                new THREE.Color(0xffc6ff)  // Violeta
+            ];
+
+            for (let i = 0; i < particlesCount; i++) {
+                // Posicionar estrelles en un nuvol esfèric gegant
+                posArray[i * 3] = (Math.random() - 0.5) * 800;
+                posArray[i * 3 + 1] = (Math.random() - 0.5) * 800;
+                posArray[i * 3 + 2] = (Math.random() - 0.5) * 800;
+
+                // Color còsmic aleatori per a aquesta partícula
+                const chosenColor = colors[Math.floor(Math.random() * colors.length)];
+                colorArray[i * 3] = chosenColor.r;
+                colorArray[i * 3 + 1] = chosenColor.g;
+                colorArray[i * 3 + 2] = chosenColor.b;
+            }
+
+            particlesGeometry.setAttribute('position', new THREE.BufferAttribute(posArray, 3));
+            particlesGeometry.setAttribute('color', new THREE.BufferAttribute(colorArray, 3));
+
+            // Intentar carregar textura circular transparent per donar suavitat a les estrelles
+            let starTexture;
+            try {
+                starTexture = textureLoader.load('https://threejs.org/examples/textures/sprites/disc.png', undefined, undefined, () => {
+                    console.log("Cargada textura de estrella");
+                }); 
+            } catch (e) {
+                console.log("Error al cargar recurso externo; usando sistema por defecto.");
+            }
+
+            const particlesMaterial = new THREE.PointsMaterial({
+                size: 1.2, 
+                sizeAttenuation: true, 
+                transparent: true,
+                opacity: 0.85,
+                vertexColors: true,
+                map: starTexture || null,      
+                alphaTest: 0.1,
+                depthWrite: false,
+                blending: THREE.AdditiveBlending
+            });
+
+            const particlesMesh = new THREE.Points(particlesGeometry, particlesMaterial);
+            scene.add(particlesMesh);
+
+            return particlesMesh;
+        }
+
+        // Crear l'objecte 3D de la Lluna amb suport a fallbacks
+        function createMoon() {
+            const moonGeometry = new THREE.SphereGeometry(75, 64, 64); 
+            
+            let moonMaterial = new THREE.MeshStandardMaterial({
+                color: 0xffffff,
+                roughness: 0.8,
+                metalness: 0.1,
+                bumpScale: 0.05
+            });
+
+            // Carregar imatge de mapa lunar
+            textureLoader.load(
+                'https://threejs.org/examples/textures/planets/moon_1024.jpg',
+                (texture) => {
+                    moonMaterial.map = texture;
+                    moonMaterial.needsUpdate = true;
+                },
+                undefined,
+                () => {
+                    // Si falla el servidor extern de textures, s'aplica un color brillant místic
+                    moonMaterial.color.setHex(0xe8e8ff);
+                    moonMaterial.emissive = new THREE.Color(0x221133);
+                }
+            );
+            
+            const mesh = new THREE.Mesh(moonGeometry, moonMaterial);
+            mesh.position.set(-60, 20, -250); 
+            
+            scene.add(mesh);
+            return mesh;
+        }
+
+        galaxyMesh = createGalaxy();
+        moonMesh = createMoon();
+
+        // ====================================================================
+        // 4. MOTOR DE TEXT FLOTANT (Transicions de Desvaniment i Pausa de 30s)
+        // ====================================================================
+        const storyText = document.getElementById('story-text');
+        let currentPhraseIndex = 0;
+
+        function showNextPhrase() {
+            // Desvanir el text actual cap a fora
+            storyText.style.opacity = '0';
+            
+            setTimeout(() => {
+                // Si ja hem mostrat totes les frases, netegem el text i iniciem la pausa de 30 segons per observar la galàxia
+                if (currentPhraseIndex === PHRASES.length) {
+                    storyText.innerHTML = ""; // Deixem l'espai net per observar la galàxia
+                    currentPhraseIndex = 0; // Reiniciem l'índex per al següent cicle
+                    
+                    // Esperar 30 segons abans de començar el cicle de nou
+                    setTimeout(showNextPhrase, 30000);
+                } else {
+                    // Mostrar la frase corresponent
+                    storyText.innerHTML = PHRASES[currentPhraseIndex];
+                    storyText.style.opacity = '1';
+                    currentPhraseIndex++;
+                    
+                    // Esperar 7.5 segons abans de passar a la següent frase o a la pausa
+                    setTimeout(showNextPhrase, 7500);
+                }
+            }, 1500); // Temps coincident amb la transició CSS d'opacitat
+        }
+
+        // Iniciar el cicle de frases després d'un breu retard inicial
+        setTimeout(showNextPhrase, 1000);
+
+        // ====================================================================
+        // 5. INTERACTIVITAT (Paral·laxi i Llançament de Cors)
+        // ====================================================================
+        
+        // Seguiment de moviment del ratolí
+        window.addEventListener('mousemove', (e) => {
+            targetX = (e.clientX - window.innerWidth / 2) * 0.08;
+            targetY = (e.clientY - window.innerHeight / 2) * 0.08;
+        });
+
+        // Suport per a gestos d'arrossegament en telèfons
+        window.addEventListener('touchmove', (e) => {
+            if (e.touches.length > 0) {
+                targetX = (e.touches[0].clientX - window.innerWidth / 2) * 0.08;
+                targetY = (e.touches[0].clientY - window.innerHeight / 2) * 0.08;
+            }
+        });
+
+        // Esdeveniment de clic a la pantalla per crear cors
+        const overlay = document.getElementById('space-overlay');
+        overlay.addEventListener('click', (e) => {
+            createHeart(e.clientX, e.clientY);
+        });
+
+        function createHeart(x, y) {
+            const heart = document.createElement('div');
+            heart.classList.add('floating-heart');
+            heart.innerHTML = '❤️';
+            heart.style.left = `${x}px`;
+            heart.style.top = `${y}px`;
+            
+            const duration = 1.6 + Math.random() * 0.8;
+            const size = 1 + Math.random() * 1.5;
+            
+            heart.style.animationDuration = `${duration}s`;
+            heart.style.transform = `scale(${size})`;
+            
+            document.body.appendChild(heart);
+
+            // Elimina l'element de la memòria en acabar la seva animació
+            setTimeout(() => {
+                heart.remove();
+            }, duration * 1000);
+        }
+
+        // ====================================================================
+        // 6. ANIMACIÓ CONTÍNUA I RENDERITZAT
+        // ====================================================================
+        const animate = function () {
+            requestAnimationFrame(animate);
+
+            // Rotacions gravitacionals de la galàxia
+            galaxyMesh.rotation.y += 0.0003;
+            galaxyMesh.rotation.x += 0.0001;
+            
+            // Rotació subtil de l'aspre lunar
+            if (moonMesh) {
+                moonMesh.rotation.y += 0.0006; 
+            }
+
+            // Interpolació suavizada per simular profunditat inercial (Lerp)
+            currentX += (targetX - currentX) * 0.04;
+            currentY += (targetY - currentY) * 0.04;
+
+            camera.position.x = currentX;
+            camera.position.y = -currentY; 
+            camera.lookAt(scene.position);
+
+            renderer.render(scene, camera); 
+        };
+
+        // Inicialitzem el bucle del motor 3D
+        animate();
+
+        // ====================================================================
+        // 7. DISSENY ADAPTATIU (Responsiu)
+        // ====================================================================
+        window.addEventListener('resize', () => {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+        });
+    </script>
+</body>
+</html>
