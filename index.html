@@ -6,10 +6,10 @@
     <title>🌟 Mi Galaxia para el Amor de Mi Vida 🌌</title>
     <!-- Cargamos Three.js para la renderización en 3D -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-    <!-- Fuentes de Google de alta calidad -->
+    <!-- Fuentes de Google: Ubuntu para los textos y Montserrat para la interfaz -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@600;700&family=Montserrat:wght@300;400;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600&family=Ubuntu:wght@400;500;700&display=swap" rel="stylesheet">
     
     <style>
         /* Estils generals del document */
@@ -66,24 +66,26 @@
             text-align: center;
         }
 
-        /* Tipografia manuscrita i efectes de brillantor per a les frases d'amor */
+        /* Tipografia de tipus Ubuntu i efectes de brillantor per a les frases d'amor */
         #story-text {
-            font-family: 'Dancing Script', cursive;
-            font-size: 2.6rem;
+            font-family: 'Ubuntu', sans-serif;
+            font-weight: 500;
+            font-size: 2.2rem;
             color: #ffe5ec;
             text-shadow: 0 0 10px rgba(255, 77, 109, 0.65), 
                          0 0 20px rgba(255, 77, 109, 0.4),
                          0 2px 4px rgba(0, 0, 0, 0.8);
-            line-height: 1.4;
+            line-height: 1.5;
             margin: 0;
             opacity: 0;
             transition: opacity 1.5s ease-in-out;
+            letter-spacing: 0.5px;
         }
 
         @media (max-width: 768px) {
             #story-text {
-                font-size: 1.9rem;
-                line-height: 1.3;
+                font-size: 1.6rem;
+                line-height: 1.4;
             }
             #floating-text-container {
                 bottom: 18%;
@@ -143,6 +145,7 @@
             box-shadow: 0 4px 20px rgba(255, 77, 109, 0.5);
         }
 
+        /* Pantalla d'inici ultra-minimalista: només el botó d'entrada */
         #start-screen {
             position: fixed;
             inset: 0;
@@ -151,38 +154,18 @@
             justify-content: center;
             background: rgba(4, 1, 15, 0.98);
             z-index: 200;
-            color: #fff;
-            text-align: center;
-            padding: 20px;
             transition: opacity 0.6s ease-in-out;
-        }
-
-        #start-screen h1 {
-            font-family: 'Dancing Script', cursive;
-            font-size: 3.5rem;
-            margin-bottom: 10px;
-            color: #ffe5ec;
-            text-shadow: 0 0 10px rgba(255, 77, 109, 0.5);
-        }
-
-        #start-screen p {
-            font-family: 'Montserrat', sans-serif;
-            font-weight: 300;
-            font-size: 1rem;
-            letter-spacing: 1px;
-            color: rgba(255, 255, 255, 0.7);
-            margin-bottom: 30px;
         }
 
         #btn-start {
             background: linear-gradient(135deg, #ff4d6d, #ff758f);
             color: white;
             border: none;
-            padding: 18px 40px;
+            padding: 18px 45px;
             border-radius: 999px;
             cursor: pointer;
-            font-family: 'Montserrat', sans-serif;
-            font-size: 1.1rem;
+            font-family: 'Ubuntu', sans-serif;
+            font-size: 1.25rem;
             font-weight: 700;
             letter-spacing: 1px;
             box-shadow: 0 10px 25px rgba(255, 77, 109, 0.35);
@@ -202,13 +185,9 @@
 </head>
 <body>
 
-    <!-- Pantalla de bienvenida interactiva obligatoria para habilitar el audio por directiva del navegador -->
+    <!-- Pantalla de bienvenida interactiva simplificada al máximo -->
     <div id="start-screen">
-        <div>
-            <h1>Bienvenida mi amor</h1>
-            <p>Pulsa el botón para comenzar y escuchar la música.</p>
-            <button id="btn-start">Abrir con amor 💖</button>
-        </div>
+        <button id="btn-start">Abrir con amor 💖</button>
     </div>
 
     <!-- Elemento de Audio para reproducir louana.mp3 con precarga automática y ruta relativa correcta -->
@@ -234,7 +213,7 @@
             "...y desde entonces cada latido de mi corazón menciona tu nombre. ❤️",
             "Sé que no te gusta mucho el texto y más te gustan las acciones...",
             "...así que solo quería decirte que estoy muy orgulloso de todo lo que haces...",
-            "...¡vamos, guerrera, estoy contigo!✨",
+            "...¡vamos, guerrera, estoy contigo! ✨",
             "Escucha la canción y pulsa una y otra vez la luna....."
         ];
 
