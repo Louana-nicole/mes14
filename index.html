@@ -6,10 +6,10 @@
     <title>🌟 Mi Galaxia para el Amor de Mi Vida 🌌</title>
     <!-- Cargamos Three.js para la renderización en 3D -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-    <!-- Fuentes de Google: Ubuntu para los textos y Montserrat para la interfaz -->
+    <!-- Fuentes de Google: Cargamos únicamente la familia Ubuntu para un estilo de letra normal y limpio -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600&family=Ubuntu:wght@400;500;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Ubuntu:wght@300;400;500;700&display=swap" rel="stylesheet">
     
     <style>
         /* Estils generals del document */
@@ -24,7 +24,7 @@
             overflow: hidden; 
             cursor: default;
             background-color: #030008; 
-            font-family: 'Montserrat', sans-serif;
+            font-family: 'Ubuntu', sans-serif; /* Tipografía Ubuntu aplicada a todo el cuerpo */
             color: #ffffff;
             height: 100vh;
             width: 100vw;
@@ -68,8 +68,8 @@
 
         /* Tipografia de tipus Ubuntu i efectes de brillantor per a les frases d'amor */
         #story-text {
-            font-family: 'Ubuntu', sans-serif;
-            font-weight: 500;
+            font-family: 'Ubuntu', sans-serif; /* Aseguramos que use letras normales Ubuntu */
+            font-weight: 400;
             font-size: 2.2rem;
             color: #ffe5ec;
             text-shadow: 0 0 10px rgba(255, 77, 109, 0.65), 
@@ -185,7 +185,7 @@
 </head>
 <body>
 
-    <!-- Pantalla de bienvenida interactiva simplificada al máximo -->
+    <!-- Pantalla de bienvenida interactiva simplificada al máximo: Solo el botón -->
     <div id="start-screen">
         <button id="btn-start">Abrir con amor 💖</button>
     </div>
