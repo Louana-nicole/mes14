@@ -142,12 +142,77 @@
             background: rgba(255, 77, 109, 0.3);
             box-shadow: 0 4px 20px rgba(255, 77, 109, 0.5);
         }
+
+        #start-screen {
+            position: fixed;
+            inset: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(4, 1, 15, 0.98);
+            z-index: 200;
+            color: #fff;
+            text-align: center;
+            padding: 20px;
+            transition: opacity 0.6s ease-in-out;
+        }
+
+        #start-screen h1 {
+            font-family: 'Dancing Script', cursive;
+            font-size: 3.5rem;
+            margin-bottom: 10px;
+            color: #ffe5ec;
+            text-shadow: 0 0 10px rgba(255, 77, 109, 0.5);
+        }
+
+        #start-screen p {
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 300;
+            font-size: 1rem;
+            letter-spacing: 1px;
+            color: rgba(255, 255, 255, 0.7);
+            margin-bottom: 30px;
+        }
+
+        #btn-start {
+            background: linear-gradient(135deg, #ff4d6d, #ff758f);
+            color: white;
+            border: none;
+            padding: 18px 40px;
+            border-radius: 999px;
+            cursor: pointer;
+            font-family: 'Montserrat', sans-serif;
+            font-size: 1.1rem;
+            font-weight: 700;
+            letter-spacing: 1px;
+            box-shadow: 0 10px 25px rgba(255, 77, 109, 0.35);
+            transition: transform 0.25s ease, box-shadow 0.25s ease;
+            outline: none;
+        }
+
+        #btn-start:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 14px 28px rgba(255, 77, 109, 0.5);
+        }
+
+        #btn-start:active {
+            transform: translateY(-1px);
+        }
     </style>
 </head>
 <body>
 
-    <!-- Elemento de Audio para reproducir louana.mp3 con precarga automática -->
-    <audio id="bg-music" src="louana.mp3" preload="auto" loop></audio>
+    <!-- Pantalla de bienvenida interactiva obligatoria para habilitar el audio por directiva del navegador -->
+    <div id="start-screen">
+        <div>
+            <h1>Bienvenida mi amor</h1>
+            <p>Pulsa el botón para comenzar y escuchar la música.</p>
+            <button id="btn-start">Abrir con amor 💖</button>
+        </div>
+    </div>
+
+    <!-- Elemento de Audio para reproducir louana.mp3 con precarga automática y ruta relativa correcta -->
+    <audio id="bg-music" src="./louana.mp3" preload="auto" loop></audio>
 
     <!-- Botón flotante para controlar la música -->
     <button id="music-toggle" onclick="toggleMusic()">🔇</button>
@@ -352,26 +417,34 @@
         // ====================================================================
         const bgMusic = document.getElementById('bg-music');
         const musicToggle = document.getElementById('music-toggle');
+        const btnStart = document.getElementById('btn-start');
+        const startScreen = document.getElementById('start-screen');
         let musicStarted = false;
 
-        // Aseguramos que el audio empiece con volumen y esté listo para reproducir
+        // Aseguramos volumen inicial alto
         bgMusic.volume = 1.0;
 
-        function startMusic() {
-            if (!musicStarted) {
-                // Ejecutamos la promesa de reproducción de forma asíncrona y segura
-                bgMusic.play().then(() => {
-                    musicStarted = true;
-                    musicToggle.innerHTML = "🔊";
-                    console.log("Reproducción iniciada exitosamente.");
-                }).catch(err => {
-                    console.log("La reproducción automática requiere interacción directa previa del usuario.", err);
-                });
-            }
-        }
+        // Evento directo de clic en el botón de entrada para arrancar de forma síncrona y segura
+        btnStart.addEventListener('click', () => {
+            // Desvanecemos la pantalla de bienvenida
+            startScreen.style.opacity = '0';
+            setTimeout(() => {
+                startScreen.style.display = 'none';
+            }, 600);
 
+            // IMPORTANTE: Reproducir el archivo directamente SIN usar bgMusic.load() primero.
+            // Esto permite que el navegador conserve de forma intacta la autorización táctil del usuario.
+            bgMusic.play().then(() => {
+                musicStarted = true;
+                musicToggle.innerHTML = "🔊";
+                console.log("Melodía iniciada correctamente desde el clic primario.");
+            }).catch(err => {
+                console.warn("Fallo al reproducir audio desde botón de inicio:", err);
+            });
+        });
+
+        // Alternador manual del botón de volumen flotante
         window.toggleMusic = function() {
-            // Aseguramos la inicialización si se hace clic directamente en el botón flotante
             if (!musicStarted) {
                 musicStarted = true;
             }
@@ -379,11 +452,21 @@
                 bgMusic.play().then(() => {
                     musicToggle.innerHTML = "🔊";
                 }).catch(err => {
-                    console.log("No se pudo iniciar el audio tras la pausa:", err);
+                    console.error("Fallo al reanudar audio:", err);
                 });
             } else {
                 bgMusic.pause();
                 musicToggle.innerHTML = "🔇";
+            }
+        }
+
+        // Función de respaldo en caso de clics accidentales en el fondo
+        function startMusicFallback() {
+            if (!musicStarted && bgMusic.paused) {
+                bgMusic.play().then(() => {
+                    musicStarted = true;
+                    musicToggle.innerHTML = "🔊";
+                }).catch(() => {});
             }
         }
 
@@ -409,16 +492,15 @@
         const overlay = document.getElementById('space-overlay');
         overlay.addEventListener('click', (e) => {
             createHeart(e.clientX, e.clientY);
-            startMusic();
+            startMusicFallback();
         });
 
         // Compatibilidad garantizada para dispositivos táctiles móviles
         overlay.addEventListener('touchstart', (e) => {
-            // Intentamos capturar coordenadas de pantalla para el corazón flotante
             if (e.touches && e.touches[0]) {
                 createHeart(e.touches[0].clientX, e.touches[0].clientY);
             }
-            startMusic();
+            startMusicFallback();
         });
 
         function createHeart(x, y) {
