@@ -146,11 +146,11 @@
 </head>
 <body>
 
-    <!-- Elemento de Audio para reproducir louana.mp3 -->
-    <audio id="bg-music" src="louana.mp3" loop></audio>
+    <!-- Elemento de Audio para reproducir louana.mp3 con precarga automática -->
+    <audio id="bg-music" src="louana.mp3" preload="auto" loop></audio>
 
     <!-- Botón flotante para controlar la música -->
-    <button id="music-toggle" onclick="toggleMusic()">🔊</button>
+    <button id="music-toggle" onclick="toggleMusic()">🔇</button>
 
     <!-- Capa interactiva de clics para efectos mágicos -->
     <div class="interactive-overlay" id="space-overlay"></div>
@@ -348,27 +348,39 @@
         setTimeout(showNextPhrase, 1000);
 
         // ====================================================================
-        // 4.5. SISTEMA DE AUDIO (louana.mp3)
+        // 4.5. SISTEMA DE AUDIO OPTIMIZADO (louana.mp3)
         // ====================================================================
         const bgMusic = document.getElementById('bg-music');
         const musicToggle = document.getElementById('music-toggle');
         let musicStarted = false;
 
+        // Aseguramos que el audio empiece con volumen y esté listo para reproducir
+        bgMusic.volume = 1.0;
+
         function startMusic() {
             if (!musicStarted) {
+                // Ejecutamos la promesa de reproducción de forma asíncrona y segura
                 bgMusic.play().then(() => {
                     musicStarted = true;
                     musicToggle.innerHTML = "🔊";
+                    console.log("Reproducción iniciada exitosamente.");
                 }).catch(err => {
-                    console.log("Esperando interacción física para la reproducción del audio.");
+                    console.log("La reproducción automática requiere interacción directa previa del usuario.", err);
                 });
             }
         }
 
         window.toggleMusic = function() {
+            // Aseguramos la inicialización si se hace clic directamente en el botón flotante
+            if (!musicStarted) {
+                musicStarted = true;
+            }
             if (bgMusic.paused) {
-                bgMusic.play();
-                musicToggle.innerHTML = "🔊";
+                bgMusic.play().then(() => {
+                    musicToggle.innerHTML = "🔊";
+                }).catch(err => {
+                    console.log("No se pudo iniciar el audio tras la pausa:", err);
+                });
             } else {
                 bgMusic.pause();
                 musicToggle.innerHTML = "🔇";
@@ -400,7 +412,12 @@
             startMusic();
         });
 
+        // Compatibilidad garantizada para dispositivos táctiles móviles
         overlay.addEventListener('touchstart', (e) => {
+            // Intentamos capturar coordenadas de pantalla para el corazón flotante
+            if (e.touches && e.touches[0]) {
+                createHeart(e.touches[0].clientX, e.touches[0].clientY);
+            }
             startMusic();
         });
 
